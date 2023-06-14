@@ -98,13 +98,13 @@ async function getInfiniteTweets({
 
   const data = await ctx.prisma.tweet.findMany({
     take: limit + 1,
-    cursor: cursor ? { createAt_id: cursor } : undefined,
-    orderBy: [{ createAt: "desc" }, { id: "desc" }],
+    cursor: cursor ? { createdAt_id: cursor } : undefined,
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
     where: whereClause,
     select: {
       id: true,
       content: true,
-      createAt: true,
+      createdAt: true,
       _count: { select: { likes: true } },
       likes:
         currentUserId == null ? false : { where: { userId: currentUserId } },
@@ -119,7 +119,7 @@ async function getInfiniteTweets({
     const nextItem = data.pop();
 
     if (nextItem != null) {
-      nextCursor = { id: nextItem.id, createdAt: nextItem.createAt };
+      nextCursor = { id: nextItem.id, createdAt: nextItem.createdAt };
     }
   }
 
@@ -128,7 +128,7 @@ async function getInfiniteTweets({
       return {
         id: tweet.id,
         content: tweet.content,
-        createdAt: tweet.createAt,
+        createdAt: tweet.createdAt,
         likeCount: tweet._count.likes,
         user: tweet.user,
         likedByMe: tweet.likes?.length > 0,
